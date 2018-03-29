@@ -2,20 +2,23 @@
 //                   HEADER FILE USED IN PROJECT
 //****************************************************************
 
-#include<conio.h>
+// #include<conio.h>
+// #include<ncurses.h>
+#include <termios.h>
 #include<stdio.h>
-#include<process.h>
-#include<fstream.h>
+#include<iostream>
+// #include<process.h>
+#include<fstream>
 #include<string.h>
 
 //***************************************************************
 //                   CLASS USED IN PROJECT
 //****************************************************************
-
+using namespace std;
 class product
 {
  int pno;
- string name;
+char name[50] ;
  float price,qty,tax,dis;
  public:
 	void create_product()
@@ -74,7 +77,7 @@ void write_product()
     fp.write((char*)&pr,sizeof(product));
     fp.close();
     cout<<"\n\nThe Product Has Been Created ";
-    getch();
+    getchar();
    }
 
 
@@ -85,17 +88,17 @@ void write_product()
 
 void display_all()
 {
-    clrscr();
+    system("clear");
     cout<<"\n\n\n\t\tDISPLAY ALL RECORD !!!\n\n";
     fp.open("Shop.dat",ios::in);
     while(fp.read((char*)&pr,sizeof(product)))
 	{
 	 pr.show_product();
 	 cout<<"\n\n====================================\n";
-	 getch();
+	 getchar();
 	 }
     fp.close();
-    getch();
+    getchar();
 }
 
 
@@ -112,7 +115,7 @@ void display_sp(int n)
 	{
 	 if(pr.retpno()==n)
 		{
-		 clrscr();
+		 system("clear");
 		 pr.show_product();
 		 flag=1;
 		}
@@ -120,7 +123,7 @@ void display_sp(int n)
     fp.close();
 if(flag==0)
  cout<<"\n\nrecord not exist";
-    getch();
+    getchar();
 }
 
 
@@ -132,7 +135,7 @@ if(flag==0)
 void modify_product()
 {
     int no,found=0;
-    clrscr();
+    system("clear");
     cout<<"\n\n\tTo Modify ";
     cout<<"\n\n\tPlease Enter The Product No. of The Product";
     cin>>no;
@@ -144,7 +147,7 @@ void modify_product()
 		    pr.show_product();
 		    cout<<"\nPlease Enter The New Details of Product"<<endl;
 		    pr.create_product();
-		    int pos=-1*sizeof(pr);
+		    int pos=-1*5;
 		    fp.seekp(pos,ios::cur);
 		    fp.write((char*)&pr,sizeof(product));
 		    cout<<"\n\n\t Record Updated";
@@ -154,7 +157,7 @@ void modify_product()
     fp.close();
     if(found==0)
     cout<<"\n\n Record Not Found ";
-    getch();
+    getchar();
 }
 
 
@@ -166,7 +169,7 @@ void modify_product()
 void delete_product()
    {
     int no;
-    clrscr();
+    system("clear");
     cout<<"\n\n\n\tDelete Record";
     cout<<"\n\nPlease Enter The product no. of The Product You Want To Delete";
     cin>>no;
@@ -186,7 +189,7 @@ void delete_product()
     remove("Shop.dat");
     rename("Temp.dat","Shop.dat");
     cout<<"\n\n\tRecord Deleted ..";
-    getch();
+    getchar();
     }
 
 
@@ -196,13 +199,13 @@ void delete_product()
 
     void menu()
     {
-     clrscr();
+     system("clear");
      fp.open("Shop.dat",ios::in);
      if(!fp)
      {
        cout<<"ERROR!!! FILE COULD NOT BE OPEN\n\n\n Go To Admin Menu to create File";
        cout<<"\n\n\n Program is closing ....";
-       getch();
+       getchar();
        exit(0);
      }
 
@@ -243,7 +246,7 @@ void delete_product()
 	 cout<<"\nDo You Want To Order Another Product ? (y/n)";
 	 cin>>ch;
     }while(ch=='y' ||ch=='Y');
-    cout<<"\n\nThank You For Placing The Order";getch();clrscr();
+    cout<<"\n\nThank You For Placing The Order";getchar();system("clear");
       cout<<"\n\n********************************INVOICE************************\n";
       cout<<"\nPr No.\tPr Name\tQuantity \tPrice \tAmount \tAmount after discount\n";
       for(int x=0;x<=c;x++)
@@ -265,7 +268,7 @@ void delete_product()
 		 fp.close();
 	 }
        cout<<"\n\n\t\t\t\t\tTOTAL = "<<total;
-    getch();
+    getchar();
     }
 
 //***************************************************************
@@ -274,16 +277,16 @@ void delete_product()
 
 void intro()
 {
- clrscr();
- gotoxy(31,11);
+ system("clear");
+//  gotoxy(31,11);
  cout<<"SUPER MARKET";
- gotoxy(35,14);
+//  gotoxy(35,14);
  cout<<"BILLING";
- gotoxy(35,17);
+//  gotoxy(35,17);
  cout<<"PROJECT";
- cout<<"\n\nMADE BY : ANUJ KUMAR";
- cout<<"\n\nSCHOOL : RYAN INTERNATIONAL SCHOOL";
- getch();
+ cout<<"\n\nMADE BY : Harshit Maheshwari and Mohd Arshul";
+ cout<<"\n\n";
+ getchar();
 
 }
 
@@ -295,7 +298,7 @@ void intro()
 //****************************************************************
 void admin_menu()
 {
-  clrscr();
+  system("clear");
   char ch2;
   cout<<"\n\n\n\tADMIN MENU";
   cout<<"\n\n\t1.CREATE PRODUCT";
@@ -306,16 +309,16 @@ void admin_menu()
   cout<<"\n\n\t6.VIEW PRODUCT MENU";
   cout<<"\n\n\t7.BACK TO MAIN MENU";
   cout<<"\n\n\tPlease Enter Your Choice (1-7) ";
-  ch2=getche();
+  ch2=getchar();
   switch(ch2)
   {
-    case '1': clrscr();
+    case '1': system("clear");
 	      write_product();
 	      break;
     case '2': display_all();break;
     case '3':
 	       int num;
-	       clrscr();
+	       system("clear");
 	       cout<<"\n\n\tPlease Enter The Product No. ";
 	       cin>>num;
 	       display_sp(num);
@@ -323,7 +326,7 @@ void admin_menu()
       case '4': modify_product();break;
       case '5': delete_product();break;
       case '6': menu();
-		getch();
+		getchar();
       case '7': break;
       default:cout<<"\a";admin_menu();
    }
@@ -335,31 +338,32 @@ void admin_menu()
 //****************************************************************
 
 
-void main()
+int main()
 {
   char ch;
   intro();
   do
     {
-	  clrscr();
+	  system("clear");
 	  cout<<"\n\n\n\tMAIN MENU";
 	  cout<<"\n\n\t01. CUSTOMER";
 	  cout<<"\n\n\t02. ADMINISTRATOR";
 	  cout<<"\n\n\t03. EXIT";
 	  cout<<"\n\n\tPlease Select Your Option (1-3) ";
-	  ch=getche();
+      ch=getchar();
 	  switch(ch)
 	  {
-		 case '1': clrscr();
+		 case '1': system("clear");
 			   place_order();
-			   getch();
+			   getchar();
 			   break;
 		  case '2': admin_menu();
 			    break;
-		  case '3':exit(0);
+		//   case '3':exit(0);
 		  default :cout<<"\a";
 	}
-    }while(ch!='3');
+}while(ch!='3');
+return 0;
 }
 
 //***************************************************************
