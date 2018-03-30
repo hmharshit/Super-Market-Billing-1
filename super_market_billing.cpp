@@ -6,6 +6,7 @@
 // #include<ncurses.h>
 #include <termios.h>
 #include<stdio.h>
+#include<cstdlib>
 #include<iostream>
 // #include<process.h>
 #include<fstream>
