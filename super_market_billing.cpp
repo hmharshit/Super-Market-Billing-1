@@ -2,14 +2,15 @@
 //                   HEADER FILE USED IN PROJECT
 //****************************************************************
 
-#include <termios.h>
+#include<termios.h>
 #include<stdio.h>
 #include<cstdlib>
 #include<iostream>
 #include<fstream>
 #include<string>
-#include <unistd.h>
-#include <pqxx/pqxx> 
+#include<unistd.h>
+#include<pqxx/pqxx> 
+
 using namespace std;
 using namespace pqxx;
 
@@ -73,26 +74,39 @@ product pr;
 //    	function to write in file
 //****************************************************************
 
-void write_product()
+int write_product()
    {
     string sql;
-   // fp.open("Shop.dat",ios::out|ios::app);
     pr.create_product();
-   // fp.write((char*)&pr,sizeof(product));
-    //fp.close();
 
-        sql = "INSERT INTO product (id, name, price, discount) "  \
-         "VALUES (2, 'Paul', 20, 10); " ;
 
+        // sql = "INSERT INTO product (id, name, price, discount) "  \
+        //  "VALUES (2, 'Paul', 20, 10); " ;
+
+ sql = "INSERT INTO products (id, name, price, discount) "  \
+         "VALUES (" + to_string(pr.retpno()) + ",'" + to_string(pr.retname()) +"',"
+         +to_string(pr.retprice())+ ","+to_string(pr.retdis()) +");" ;
+
+      // std::cout<sql;
+      // getchar();
       /* Create a transactional object. */
-      work W(C);
-      
-      /* Execute SQL query */
-      W.exec( sql );
+
+
+            work W(C);
+   try {
+        W.exec( sql );
       W.commit();
       cout << "Records created successfully" << endl;
     cout<<"\n\nThe Product Has Been Created ";
-    getchar();
+    //  cout << "Table created successfully" << endl;
+      return 1;
+      }
+
+      catch (const std::exception &e) {
+      cerr << e.what() << std::endl;
+      return 0;
+}
+          
    }
 
 
@@ -101,20 +115,44 @@ void write_product()
 //    	function to read all records from file
 //****************************************************************
 
-void display_all()
+int display_all()
 {
     system("clear");
+    string sql;
     cout<<"\n\n\n\t\tDISPLAY ALL RECORD !!!\n\n";
-    fp.open("Shop.dat",ios::in);
-    while(fp.read((char*)&pr,sizeof(product)))
-	{
-	 pr.show_product();
-	 cout<<"\n\n====================================\n";
-	 getchar();
-	 }
-    fp.close();
     getchar();
+    try {
+
+      /* Create SQL statement */
+      sql = "SELECT * from products";
+
+      /* Create a non-transactional object. */
+      nontransaction N(C);
+      
+      /* Execute SQL query */
+      result R( N.exec( sql ));
+      
+      /* List down all the records */
+      for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
+         cout << "PRODUCT_ID = " << c[0].as<int>() << " ";
+         cout << "PRODUCT_NAMEN = " << c[1].as<string>() << " ";
+         cout << "PRICE = " << c[2].as<float>() << " ";
+         cout << "DISCOUNT = " << c[3].as<float>() <<"%"<<endl;
+         cout<<"====================================================\n";
+
+      }
+      getchar();
+      C.disconnect ();
+   } catch (const std::exception &e) {
+      cerr << e.what() << std::endl;
+
+      getchar();
+      return 1;
+   }
+
+   return 0;
 }
+
 
 
 //***************************************************************
@@ -146,20 +184,8 @@ if(flag==0)
 //    	function to modify record of file
 //****************************************************************
 
-int init_database() {
-     try {
-      if (C.is_open()) {
-         cout << "Opened database successfully: " << C.dbname() << endl;
-      } else {
-         cout << "Can't open database" << endl;
-         return 1;
-      }
-   } catch (const std::exception &e) {
-    cout<<"in exception";
-      cerr << e.what() << std::endl;
-      return 1;
-   }
-}
+
+
 
 void modify_product()
 {
@@ -367,14 +393,49 @@ void admin_menu()
 //****************************************************************
 
 
-void create_database() 
-{
+// function to initialize database
+int init_database() {
+     try {
+      if (C.is_open()) {
+         cout << "Opened database successfully: " << C.dbname() << endl;
+      } else {
+         cout << "Can't open database" << endl;
+         return 1;
+      }
+   } catch (const std::exception &e) {
+    cout<<"in exception";
+      cerr << e.what() << std::endl;
+      return 1;
+   }
+}
 
+int create_tables()
+{
+  string sql;
+  sql = "CREATE TABLE PRODUCTS("  \
+      "ID INT PRIMARY KEY  NOT NULL," \
+      "NAME TEXT NOT NULL," \
+      "price double precision NOT NULL," \
+      "discount double precision );";
+
+   work W(C);
+   try {
+       W.exec( sql );
+      W.commit();
+    //  cout << "Table created successfully" << endl;
+      return 1;
+      }
+
+      catch (const std::exception &e) {
+      cerr << e.what() << std::endl;
+      return 0;
+}
 }
 
 int main()
 {
   init_database();
+  create_tables();
   char ch;
   intro();
   do
