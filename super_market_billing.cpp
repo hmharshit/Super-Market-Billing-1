@@ -2,20 +2,21 @@
 //                   HEADER FILE USED IN PROJECT
 //****************************************************************
 
-// #include<conio.h>
-// #include<ncurses.h>
 #include <termios.h>
 #include<stdio.h>
 #include<cstdlib>
 #include<iostream>
-// #include<process.h>
 #include<fstream>
-#include<string.h>
+#include<string>
+#include <unistd.h>
+#include <pqxx/pqxx> 
+using namespace std;
+using namespace pqxx;
+
 
 //***************************************************************
 //                   CLASS USED IN PROJECT
 //****************************************************************
-using namespace std;
 class product
 {
  int pno;
@@ -60,11 +61,12 @@ char name[50] ;
 
 
 //***************************************************************
-//    	global declaration for stream object, object
+//    	global declarations
 //****************************************************************
-
- fstream fp;
- product pr;
+connection C("dbname = dbms user = harshit password = aaaa \
+      hostaddr = 127.0.0.1 port = 5432");
+fstream fp;
+product pr;
 
 
 //***************************************************************
@@ -73,19 +75,31 @@ char name[50] ;
 
 void write_product()
    {
-    fp.open("Shop.dat",ios::out|ios::app);
+    string sql;
+   // fp.open("Shop.dat",ios::out|ios::app);
     pr.create_product();
-    fp.write((char*)&pr,sizeof(product));
-    fp.close();
+   // fp.write((char*)&pr,sizeof(product));
+    //fp.close();
+
+        sql = "INSERT INTO product (id, name, price, discount) "  \
+         "VALUES (2, 'Paul', 20, 10); " ;
+
+      /* Create a transactional object. */
+      work W(C);
+      
+      /* Execute SQL query */
+      W.exec( sql );
+      W.commit();
+      cout << "Records created successfully" << endl;
     cout<<"\n\nThe Product Has Been Created ";
     getchar();
    }
 
 
+
 //***************************************************************
 //    	function to read all records from file
 //****************************************************************
-
 
 void display_all()
 {
@@ -132,6 +146,20 @@ if(flag==0)
 //    	function to modify record of file
 //****************************************************************
 
+int init_database() {
+     try {
+      if (C.is_open()) {
+         cout << "Opened database successfully: " << C.dbname() << endl;
+      } else {
+         cout << "Can't open database" << endl;
+         return 1;
+      }
+   } catch (const std::exception &e) {
+    cout<<"in exception";
+      cerr << e.what() << std::endl;
+      return 1;
+   }
+}
 
 void modify_product()
 {
@@ -224,7 +252,6 @@ void delete_product()
 
 
 
-
 //***************************************************************
 //    	function to place order and generating bill for Products
 //****************************************************************
@@ -278,7 +305,7 @@ void delete_product()
 
 void intro()
 {
- system("clear");
+  system("clear");
 //  gotoxy(31,11);
  cout<<"SUPER MARKET";
 //  gotoxy(35,14);
@@ -316,7 +343,8 @@ void admin_menu()
     case '1': system("clear");
 	      write_product();
 	      break;
-    case '2': display_all();break;
+    case '2': 
+    display_all();break;
     case '3':
 	       int num;
 	       system("clear");
@@ -339,8 +367,14 @@ void admin_menu()
 //****************************************************************
 
 
+void create_database() 
+{
+
+}
+
 int main()
 {
+  init_database();
   char ch;
   intro();
   do
