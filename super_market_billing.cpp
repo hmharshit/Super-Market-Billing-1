@@ -63,7 +63,7 @@ class product {
 //***************************************************************
 //      global declarations
 //****************************************************************
-connection C("dbname = dbms user = harshit password = aaaa \
+connection C("dbname = oops user = postgres password = root \
       hostaddr = 127.0.0.1 port = 5432");
 fstream fp;
 product pr;
@@ -120,7 +120,7 @@ int display_all() {
 
     /* Execute SQL query */
     result R(N.exec(sql));
-
+    
     /* List down all the records */
     for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
       cout << "PRODUCT_ID = " << c[0].as < int > () << " ";
@@ -147,20 +147,38 @@ int display_all() {
 //****************************************************************
 
 void display_sp(int n) {
+  try {
+  string sql;
   int flag = 0;
-  fp.open("Shop.dat", ios:: in );
-  while (fp.read((char * ) & pr, sizeof(product))) {
-    if (pr.retpno() == n) {
-      system("clear");
-      pr.show_product();
+  sql = "SELECT * from products WHERE id =" +to_string(n);
+  nontransaction N(C);
+  result R(N.exec(sql));
+  for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
+      cout << "PRODUCT_ID = " << c[0].as < int > () << " ";
+      cout << "PRODUCT_NAMEN = " << c[1].as < string > () << " ";
+      cout << "PRICE = " << c[2].as < float > () << " ";
+      cout << "DISCOUNT = " << c[3].as < float > () << "%" << endl;
+      cout << "====================================================\n";
       flag = 1;
     }
+    getchar();
+  } catch (const std::exception & e) {
+    cerr << e.what() << std::endl;
+    getchar();
   }
-  fp.close();
-  if (flag == 0)
-    cout << "\n\nrecord not exist";
+  // fp.open("Shop.dat", ios:: in );
+  // while (fp.read((char * ) & pr, sizeof(product))) {
+  //   if (pr.retpno() == n) {
+  //     system("clear");
+  //     pr.show_product();
+  //     flag = 1;
+  //   }
+  // }
+  // fp.close();
+  // if (flag == 0)
+  //   cout << "\n\nrecord not exist";
   getchar();
-}
+  }
 
 //***************************************************************
 //      function to modify record of file
@@ -236,7 +254,6 @@ void menu() {
   for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
     cout << c[0] << "\t\t" << c[1] << "\t\t" << c[2] << endl;
   }
-  fp.close();
 }
 
 //***************************************************************
@@ -259,29 +276,48 @@ void place_order() {
     c++;
     cout << "\nDo You Want To Order Another Product ? (y/n)";
     cin >> ch;
+    cout<<"value of c"<<c;
   } while (ch == 'y' || ch == 'Y');
   cout << "\n\nThank You For Placing The Order";
   getchar();
   system("clear");
   cout << "\n\n********************************INVOICE************************\n";
-  cout << "\nPr No.\tPr Name\tQuantity \tPrice \tAmount \tAmount after discount\n";
-  for (int x = 0; x <= c; x++) {
-    fp.open("Shop.dat", ios:: in );
-    fp.read((char * ) & pr, sizeof(product));
-    while (!fp.eof()) {
-      if (pr.retpno() == order_arr[x]) {
-        amt = pr.retprice() * quan[x];
-        damt = amt - (amt * pr.retdis() / 100);
-        cout << "\n" << order_arr[x] << "\t" << pr.retname() << "\t" << quan[x] << "\t\t" << pr.retprice() << "\t" << amt << "\t\t" << damt;
+  cout << "\nPr No.\tPr Name\t\tQuantity \tPrice \tAmount \t\tAmount after discount\n";
+  for (int o=0; o<c;o++){
+    string sql;
+    sql = "SELECT * from products WHERE id =" +to_string(order_arr[o]);
+    nontransaction N(C);
+    result R(N.exec(sql));
+    for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
+        amt =  c[2].as < float > () * quan[o];
+        damt = amt - (amt * c[3].as < float > ()/ 100);
+        cout << "\n" << order_arr[o] << "\t" << c[1].as < string > () << "\t\t" << quan[o] << "\t\t" << c[2].as < float > () << "\t" << amt << "\t\t" << damt;
         total += damt;
       }
-      fp.read((char * ) & pr, sizeof(product));
     }
+     cout << "\n\n\t\t\t\t\tTOTAL = " << total;
+    getchar();
+  
+  // cout << "\n\n********************************INVOICE************************\n";
+  // cout << "\nPr No.\tPr Name\tQuantity \tPrice \tAmount \tAmount after discount\n";
 
-    fp.close();
-  }
-  cout << "\n\n\t\t\t\t\tTOTAL = " << total;
-  getchar();
+  // for (int x = 0; x < c; x++) {
+  //   fp.open("Shop.dat", ios:: in );
+  //   fp.read((char * ) & pr, sizeof(product));
+  //   while (!fp.eof()) {
+  //     if (pr.retpno() == order_arr[x]) {
+  //       amt = pr.retprice() * quan[x];
+  //       damt = amt - (amt * pr.retdis() / 100);
+  //       cout << "\n" << order_arr[x] << "\t" << pr.retname() << "\t" << quan[x] << "\t\t" << pr.retprice() << "\t" << amt << "\t\t" << damt;
+  //       total += damt;
+  //     }
+  //     fp.read((char * ) & pr, sizeof(product));
+  //   }
+
+  //   fp.close();
+  // }
+  // cout << "\n\n\t\t\t\t\tTOTAL = " << total;
+  // getchar();
 }
 
 //***************************************************************
