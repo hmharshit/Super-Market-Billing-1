@@ -12,6 +12,7 @@
 #include <string> 
 #include <unistd.h> 
 #include <pqxx/pqxx>
+#include <ctime>
 
 using namespace std;
 using namespace pqxx;
@@ -75,11 +76,29 @@ class product {
 //***************************************************************
 //      global declarations
 //****************************************************************
-connection C("dbname = dbms user = harshit password = aaaa \
+connection C("dbname = oops user = postgres password = root \
       hostaddr = 127.0.0.1 port = 5432");
 fstream fp;
 product pr;
 
+int auth(){
+  string pass = "root";
+  string input;
+  cout << "\nenter your password: ";
+  termios tty;
+  tcgetattr(STDIN_FILENO, &tty);
+  tty.c_lflag &= ~ECHO;
+  tcsetattr(STDIN_FILENO, TCSANOW, &tty);
+  cin >> input;
+  tty.c_lflag |= ECHO;
+  tcsetattr(STDIN_FILENO, TCSANOW, &tty);
+  if (input==pass){
+      return 1;
+  }else{
+    cout << "Wrong" << endl;
+    auth();
+  }
+}
 //***************************************************************
 //      function to write in file
 //****************************************************************
@@ -261,7 +280,7 @@ int delete_product() {
 void menu() {
   system("clear");
   string sql;
-  sql = "SELECT * from products";
+  sql = "SELECT * from products order by id";
   nontransaction N(C);
   result R(N.exec(sql));
   cout << "\n\n\t\tProduct MENU\n\n";
@@ -270,7 +289,7 @@ void menu() {
   cout << "====================================================\n";
 
   for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
-    cout << c[0] << "\t\t" << c[1] << "\t\t" << c[2] << endl;
+    cout << c[0] << "\t\t" << c[1] << "\t\t" << c[2] << "\n";
   }
   getchar();
 }
@@ -314,7 +333,14 @@ void place_order() {
         total += damt;
       }
     }
-     cout << "\n\n\t\t\t\t\tTOTAL = " << total;
+     cout << "\n\n\t\t\t\t\t\t\t\t\t\tTOTAL = " << total<<"\n\n";
+     time_t t = time(0);   // get time now
+    tm* now = localtime(&t);
+    cout <<"Date: "<<  now->tm_mday<< '/'
+         << (now->tm_mon + 1) << '/'
+         << (now->tm_year + 1900);
+    cout<<"\t\t\t\t\t\t\t\t\t\tstamp\n\n";
+
     getchar();
   
 }
@@ -324,6 +350,7 @@ void place_order() {
 //****************************************************************
 
 void intro() {
+  cout<<"\n\n\n\n\t\t\t\t\t\t\t";
   system("clear");
   //  gotoxy(31,11);
   cout<<"\n-----------------------------------------------------\n";
@@ -333,8 +360,8 @@ void intro() {
   //  gotoxy(35,17);
   cout << "PROJECT ";
   cout<<"\n----------------------------------------------------";
-  cout << "\n\nMADE BY : Jatin Sharma";
-  cout<<"\n\nROLL NO. : 02710102716\n";
+  cout << "\n\nMADE BY :  Harshit Maheshwari and Mohd Arshul";
+  cout<<"\n\nROLL NO. : 02510102716\tand\t 03410102716\n";
   cout<<"----------------------------------------------------";
   cout << "\n\n";
   getchar();
@@ -437,6 +464,7 @@ int main() {
   init_database();
   create_tables();
   char ch;
+  int res;
   intro();
   do {
     system("clear");
@@ -456,7 +484,10 @@ int main() {
       getchar();
       break;
     case '2':
-      admin_menu();
+      res = auth();
+      if(res){
+        admin_menu();
+      }
       break;
       //   case '3':exit(0);
     default:
