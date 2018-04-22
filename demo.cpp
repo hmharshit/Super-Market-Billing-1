@@ -1,7 +1,6 @@
 //***************************************************************
 //                   HEADER FILE USED IN PROJECT
 //****************************************************************
-// g++ -std=c++11 -I/usr/local/include demo.cpp -lpqxx -lpq
 
 
 #include <termios.h> 
@@ -76,11 +75,14 @@ class product {
 //***************************************************************
 //      global declarations
 //****************************************************************
-connection C("dbname = oops user = postgres password = root \
+connection C("dbname = dbms user = harshit password = aaaa \
       hostaddr = 127.0.0.1 port = 5432");
-fstream fp;
 product pr;
 
+
+//***************************************************************
+//      function to authenticate to admin dashboard
+//****************************************************************
 int auth(){
   string pass = "root";
   string input;
@@ -99,10 +101,55 @@ int auth(){
     auth();
   }
 }
-//***************************************************************
-//      function to write in file
-//****************************************************************
 
+
+//***************************************************************
+//      function to connect to database
+//***************************************************************
+int init_database() {
+  try {
+    if (C.is_open()) {
+      cout << "Opened database successfully: " << C.dbname() << endl;
+    } else {
+      cout << "Can't open database" << endl;
+      return 1;
+    }
+  } catch (const std::exception & e) {
+    cout << "in exception";
+    cerr << e.what() << std::endl;
+    return 1;
+  }
+}
+
+
+//***************************************************************
+//      function to create tables in database
+//****************************************************************
+int create_tables() {
+  string sql;
+  sql = "CREATE TABLE PRODUCTS("\
+  "ID INT PRIMARY KEY  NOT NULL,"\
+  "NAME TEXT NOT NULL,"\
+  "price double precision NOT NULL,"\
+  "discount double precision );";
+
+  work W(C);
+  try {
+    W.exec(sql);
+    W.commit();
+    //  cout << "Table created successfully" << endl;
+    return 1;
+  } catch (const std::exception & e) {
+    cerr << e.what() << std::endl;
+    return 0;
+  }
+}
+
+
+
+//***************************************************************
+//      function to insert in table
+//****************************************************************
 int write_product() {
   string sql;
   pr.create_product();
@@ -125,7 +172,7 @@ int write_product() {
 }
 
 //***************************************************************
-//      function to read all records from file
+//      function to read all records from table
 //****************************************************************
 
 int display_all() {
@@ -165,10 +212,10 @@ int display_all() {
   return 0;
 }
 
-//***************************************************************
-//      function to read specific record from file
-//****************************************************************
 
+//***************************************************************
+//      function to read specific record from table
+//****************************************************************
 void display_sp(int n) {
   try {
   string sql;
@@ -194,13 +241,9 @@ void display_sp(int n) {
   }
 
 //***************************************************************
-//      function to modify record of file
+//      function to modify record of table
 //****************************************************************
-
 int modify_product() {
-
-
-
 system("clear");
   try {
   string sql;
@@ -244,10 +287,10 @@ system("clear");
   return 1;
 }
 
-//***************************************************************
-//      function to delete record of file
-//****************************************************************
 
+//***************************************************************
+//      function to delete record of database
+//****************************************************************
 int delete_product() {
   string sql;
   int no;
@@ -276,7 +319,6 @@ int delete_product() {
 //***************************************************************
 //      function to display all products price list
 //****************************************************************
-
 void menu() {
   system("clear");
   string sql;
@@ -333,12 +375,12 @@ void place_order() {
         total += damt;
       }
     }
-     cout << "\n\n\t\t\t\t\t\t\t\t\t\tTOTAL = " << total<<"\n\n";
+     cout << "\n\n\t\t\t\t\t\t\t\t\t\tTOTAL = " << "₹"<<total<<"\n\n";
      time_t t = time(0);   // get time now
     tm* now = localtime(&t);
     cout <<"Date: "<<  now->tm_mday<< '/'
          << (now->tm_mon + 1) << '/'
-         << (now->tm_year + 1900);
+         << (now->tm_year + 1900)<< " "<< (now -> tm_hour)<<":"<<(now->tm_min)<<":"<<(now->tm_sec);
     cout<<"\t\t\t\t\t\t\t\t\t\tstamp\n\n";
 
     getchar();
@@ -425,40 +467,6 @@ void admin_menu() {
 //****************************************************************
 
 // function to initialize database
-int init_database() {
-  try {
-    if (C.is_open()) {
-      cout << "Opened database successfully: " << C.dbname() << endl;
-    } else {
-      cout << "Can't open database" << endl;
-      return 1;
-    }
-  } catch (const std::exception & e) {
-    cout << "in exception";
-    cerr << e.what() << std::endl;
-    return 1;
-  }
-}
-
-int create_tables() {
-  string sql;
-  sql = "CREATE TABLE PRODUCTS("\
-  "ID INT PRIMARY KEY  NOT NULL,"\
-  "NAME TEXT NOT NULL,"\
-  "price double precision NOT NULL,"\
-  "discount double precision );";
-
-  work W(C);
-  try {
-    W.exec(sql);
-    W.commit();
-    //  cout << "Table created successfully" << endl;
-    return 1;
-  } catch (const std::exception & e) {
-    cerr << e.what() << std::endl;
-    return 0;
-  }
-}
 
 int main() {
   init_database();
