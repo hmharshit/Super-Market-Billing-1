@@ -75,7 +75,7 @@ class product {
 //***************************************************************
 //      global declarations
 //****************************************************************
-connection C("dbname = dbms user = harshit password = aaaa \
+connection C("dbname = oops user = postgres password = root \
       hostaddr = 127.0.0.1 port = 5432");
 product pr;
 
@@ -392,19 +392,21 @@ void place_order() {
 //****************************************************************
 
 void intro() {
-  cout<<"\n\n\n\n\t\t\t\t\t\t\t";
   system("clear");
+  // cout<<"\n\n\n\n\t\t\t\t\t\t\t";
   //  gotoxy(31,11);
-  cout<<"\n-----------------------------------------------------\n";
-  cout << "\t\tSUPER MARKET ";
+  // cout<<"\n-----------------------------------------------------\n";
+  //  gotoxy(31,11);
+  cout << "\t\t\t\t\t\t\tSUPER MARKET ";
   //  gotoxy(35,14);
-  cout << "MANAGEMENT ";
+  cout << "BILLING ";
   //  gotoxy(35,17);
-  cout << "PROJECT ";
-  cout<<"\n----------------------------------------------------";
-  cout << "\n\nMADE BY :  Harshit Maheshwari and Mohd Arshul";
-  cout<<"\n\nROLL NO. : 02510102716\tand\t 03410102716\n";
-  cout<<"----------------------------------------------------";
+  cout << "PROJECT";
+  // cout << "\033[1;31mbold red text\033[0m\n";
+  cout << "\n\n\t\t\t\t\t\tMADE BY : \033[1;31mHarshit Maheshwari\033[0m and \033[1;31mMohd Arshul\033[0m";
+  cout << "\n\n";
+  getchar();
+  // cout<<"----------------------------------------------------";
   cout << "\n\n";
   getchar();
 
@@ -416,20 +418,20 @@ void intro() {
 void admin_menu() {
   system("clear");
   char ch2;
-  system("clear");
   cout<<"\n";
   cout<<"\n*****************************************";
-  cout << "\n\tADMIN MENU";
+  cout << "\n\t\033[1;32mADMIN MENU\033[0m";
   cout<<"\n*****************************************";
-  cout << "\n\t1.CREATE PRODUCT";
-  cout << "\n\t2.DISPLAY ALL PRODUCTS";
-  cout << "\n\t3.INFORMATION ABOUT PRODUCT";
-  cout << "\n\t4.MODIFY PRODUCT";
-  cout << "\n\t5.DELETE PRODUCT";
-  cout << "\n\t6.VIEW PRODUCT MENU";
-  cout << "\n\t7.BACK TO MAIN MENU";
-  cout << "\n\tPlease Enter Your Choice (1-7) = ";
+  cout << "\n\n\t\033[1;34m1.CREATE PRODUCT\033[0m\n";
+  cout << "\n\n\t\033[1;34m2.DISPLAY ALL PRODUCTS\033[0m\n";
+  cout << "\n\n\t\033[1;34m3.QUERY\033[0m\n";
+  cout << "\n\n\t\033[1;34m4.MODIFY PRODUCT\033[0m\n";
+  cout << "\n\n\t\033[1;34m5.DELETE PRODUCT\033[0m\n";
+  cout << "\n\n\t\033[1;34m6.VIEW PRODUCT MENU\033[0m\n";
+  cout << "\n\n\t\033[1;34m7.BACK TO MAIN MENU\033[0m\n";
+  cout << "\n\n\t\033[1;34mPlease Enter Your Choice (1-7) \033[0m\n";
   ch2 = getchar();
+  system("clear");
   switch (ch2) {
   case '1':
     system("clear");
@@ -478,12 +480,12 @@ int main() {
     system("clear");
     cout<<"\n\n\n";
     cout<<"************************************************************\n";
-    cout << "\t\tMAIN MENU\n";
+    cout << "\t\t\033[1;32mMAIN MENU\033[0m\n";
     cout<<"************************************************************\n";
-    cout << "\n\n\t01. CUSTOMER";
-    cout << "\n\n\t02. ADMINISTRATOR";
-    cout << "\n\n\t03. EXIT";
-    cout << "\n\n\tPlease Select Your Option (1-3) : ";
+    cout << "\n\n\t\033[1;36m01. CUSTOMER\033[0m\n";
+    cout << "\n\n\t\033[1;36m02. ADMINISTRATOR\033[0m\n";
+    cout << "\n\n\t\033[1;31m03. EXIT\033[0m\n";
+    cout << "\n\n\tPlease Select Your Option (1-3)\n";
     ch = getchar();
     switch (ch) {
     case '1':
@@ -493,7 +495,9 @@ int main() {
       break;
     case '2':
       res = auth();
+
       if(res){
+        system("clear");
         admin_menu();
       }
       break;

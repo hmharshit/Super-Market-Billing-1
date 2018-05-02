@@ -327,12 +327,13 @@ void place_order() {
 void intro() {
   system("clear");
   //  gotoxy(31,11);
-  cout << "SUPER MARKET";
+  cout << "\t\t\t\t\t\t\tSUPER MARKET ";
   //  gotoxy(35,14);
-  cout << "BILLING";
+  cout << "BILLING ";
   //  gotoxy(35,17);
   cout << "PROJECT";
-  cout << "\n\nMADE BY : Harshit Maheshwari and Mohd Arshul";
+  // cout << "\033[1;31mbold red text\033[0m\n";
+  cout << "\n\n\t\t\t\t\t\tMADE BY : \033[1;31mHarshit Maheshwari\033[0m and \033[1;31mMohd Arshul\033[0m";
   cout << "\n\n";
   getchar();
 
@@ -345,14 +346,14 @@ void admin_menu() {
   system("clear");
   char ch2;
   cout << "\n\n\n\tADMIN MENU";
-  cout << "\n\n\t1.CREATE PRODUCT";
-  cout << "\n\n\t2.DISPLAY ALL PRODUCTS";
-  cout << "\n\n\t3.QUERY ";
-  cout << "\n\n\t4.MODIFY PRODUCT";
-  cout << "\n\n\t5.DELETE PRODUCT";
-  cout << "\n\n\t6.VIEW PRODUCT MENU";
-  cout << "\n\n\t7.BACK TO MAIN MENU";
-  cout << "\n\n\tPlease Enter Your Choice (1-7) ";
+  cout << "\n\n\t\033[1;34m1.CREATE PRODUCT\033[0m";
+  cout << "\n\n\t\033[1;34m2.DISPLAY ALL PRODUCTS\033[0m";
+  cout << "\n\n\t\033[1;34m3.QUERY\033[0m ";
+  cout << "\n\n\t\033[1;34m4.MODIFY PRODUCT\033[0m";
+  cout << "\n\n\t\033[1;34m5.DELETE PRODUCT\033[0m";
+  cout << "\n\n\t\033[1;34m6.VIEW PRODUCT MENU\033[0m";
+  cout << "\n\n\t\033[1;34m7.BACK TO MAIN MENU\033[0m";
+  cout << "\n\n\t\033[1;34mPlease Enter Your Choice (1-7) \033[0m";
   ch2 = getchar();
   switch (ch2) {
   case '1':
@@ -433,10 +434,10 @@ int main() {
   intro();
   do {
     system("clear");
-    cout << "\n\n\n\tMAIN MENU";
-    cout << "\n\n\t01. CUSTOMER";
-    cout << "\n\n\t02. ADMINISTRATOR";
-    cout << "\n\n\t03. EXIT";
+    cout << "\n\n\n\t\033[1;32mMAIN MENU\033[0m";
+    cout << "\n\n\t\033[1;36m01. CUSTOMER\033[0m";
+    cout << "\n\n\t\033[1;36m02. ADMINISTRATOR\033[0m";
+    cout << "\n\n\t\033[1;31m03. EXIT\033[0m";
     cout << "\n\n\tPlease Select Your Option (1-3) ";
     ch = getchar();
     switch (ch) {
