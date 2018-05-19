@@ -9,3 +9,6 @@ add-apt-repository ppa:jtv/ppa
 apt-get update
 apt-get -y install libpqxx-dev
 ```
+##### Contributors:-
+* [_Harshit Maheshwari](https://github.com/hmharshit)
+* [_Md. Arshul](https://github.com/arshul)
