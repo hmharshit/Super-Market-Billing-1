@@ -10,5 +10,5 @@ apt-get update
 apt-get -y install libpqxx-dev
 ```
 ##### Contributors:-
-* [_Harshit Maheshwari_](https://github.com/hmharshit)
-* [_Md. Arshul_](https://github.com/arshul)
+* [_Harshit Maheshwari_](https://github.com/hmharshit){:target="_blank"}
+* [_Md. Arshul_](https://github.com/arshul){:target="_blank"}
